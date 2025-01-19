@@ -7,7 +7,8 @@ const createEntry = async(req,res)=>{
         const newEntry = new Entry({
             amount,
             description,
-            category
+            category,
+            date : new Date(),
         })
         await newEntry.save();
         res.status(200).json({message : "Entry Saved" , entry:newEntry})

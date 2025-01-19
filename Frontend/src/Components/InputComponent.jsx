@@ -13,6 +13,9 @@ const InputComponent = () => {
   const[successMessage,setSuccessMessage]=useState('');
   const[userData,setUserData]=useState(null);
 
+  const[selectedCategory,setSelectedCategory] = useState('');
+  const[selectedTimeRange,setSelectedTimeRange] = useState('');
+
   const handleAmount = (event)=>{
     setAmount(event.target.value);
   }
@@ -34,7 +37,7 @@ const InputComponent = () => {
       amount , description , category
     })
     .then((response)=>{
-        console.log(response.data);
+        // console.log(response.data);
         setSuccessMessage("Entry Saved Successfully");
         setTimeout(()=>setSuccessMessage(''),3000);
         setData(response.data);
@@ -56,6 +59,45 @@ const handleUserIdFetch = async ()=>{
     }
 }
 
+const handleDeleteButton = async(id)=>{
+
+    try {
+      const response = await axios.delete(`http://localhost:8000/api/deleteEntry/${id}`);
+      console.log("handleDeleteButton response ",response.data.message);
+
+      setUserData((prevData) => prevData.filter((entry)=> entry._id !== id));
+      setSuccessMessage('Entry Delete Successfully');
+      setTimeout(()=>setSuccessMessage(''),3000);
+    } catch (error) {
+      console.log('Error in handleDeleteButton' , error);
+      setError('Failed to delete entry');
+      setTimeout(()=>setError(''),3000);
+    }
+}
+
+const filteredData = userData?.filter((item)=>{
+  const matchCategory = selectedCategory ? item.category === selectedCategory : true;
+
+  let matchTimeRange = true;
+  if(selectedTimeRange){
+    const entryDate= new Date(item.Date);
+    const today = new Date();
+
+    if(selectedTimeRange === 'Today'){
+      matchTimeRange = entryDate.toDateString() === today.toDateString();
+    }
+    else if(selectedTimeRange === 'Last 7 days'){
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(today.getDate()-7);
+      matchTimeRange = entryDate >= sevenDaysAgo;
+    }
+    else if(selectedTimeRange === 'This month'){
+      matchTimeRange = entryDate.getMonth()===today.getMonth() && entryDate.getFullYear() === today.getFullYear();
+    }
+  }
+  return matchCategory && matchTimeRange;
+})
+
   return (
     <div className='OuterMostDiv'>
         <div className='inputFields'>
@@ -75,6 +117,24 @@ const handleUserIdFetch = async ()=>{
         <div>
           {successMessage && <p className='successMessage'>{successMessage}</p>}
         </div>
+
+        <div className="sortOptions">
+          <select id='categoryFilter' onChange={(e)=> setSelectedCategory(e.target.value)} value={selectedCategory}>
+            <option value="">Select Category</option>
+            <option value="Food">Food</option>
+            <option value="Rent">Rent</option>
+            <option value="Travel">Travel</option>
+            <option value="Others">Others</option>
+          </select>
+
+          <select id='timeRangeFilter' onChange={(e)=> setSelectedTimeRange(e.target.value)} value={selectedTimeRange}>
+            <option value="">Select Time Range</option>
+            <option value="Today">Today</option>
+            <option value="Last 7 days">Last 7 days</option>
+            <option value="This month">This month</option>
+          </select>
+        </div>
+
         <div className='tableData'>
           <table className='styledTable'>
             <thead>
@@ -86,12 +146,12 @@ const handleUserIdFetch = async ()=>{
               </tr>
             </thead>
             <tbody>
-              {userData && userData.map((item)=>(
+              {filteredData && filteredData.map((item)=>(
               <tr key={item._id}>
                 <td>{item.amount}</td>
                 <td>{item.description}</td>
                 <td>{item.category}</td>
-                <td>{item.Date}</td>
+                <td className='dateAndDelete'>{item.Date} <button className='deleteButton' onClick={()=>{handleDeleteButton(item._id)}}>Delete</button> </td>
               </tr>
             ))}
             </tbody>
