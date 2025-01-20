@@ -33,7 +33,7 @@ const InputComponent = () => {
   },[]);
 
   const handleAddButton = async ()=>{
-      await axios.post('http://localhost:8000/api/data',{
+      await axios.post('https://expensetracker-web-page.onrender.com/api/data',{
       amount , description , category
     })
     .then((response)=>{
@@ -49,7 +49,7 @@ const InputComponent = () => {
 
 const handleUserIdFetch = async ()=>{
     try {
-      const response = await axios.get('http://localhost:8000/api/fetchAllData')
+      const response = await axios.get('https://expensetracker-web-page.onrender.com/api/fetchAllData')
       setUserData(response.data);
       setLoading(false);
       console.log(response.data)
@@ -62,7 +62,7 @@ const handleUserIdFetch = async ()=>{
 const handleDeleteButton = async(id)=>{
 
     try {
-      const response = await axios.delete(`http://localhost:8000/api/deleteEntry/${id}`);
+      const response = await axios.delete(`https://expensetracker-web-page.onrender.com/api/deleteEntry/${id}`);
       console.log("handleDeleteButton response ",response.data.message);
 
       setUserData((prevData) => prevData.filter((entry)=> entry._id !== id));
