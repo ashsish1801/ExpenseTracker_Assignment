@@ -1,0 +1,32 @@
+.outerNavbarDiv{
+    background-color: #4CAF50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.logo{
+    font-family: 'Roboto';
+    margin-left: 20px;
+    font-size: medium;
+
+}
+
+.contentNavbar{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    font-family: 'Roboto';
+    font-size: large;
+    margin-right: 45%;
+}
+
+.contentNavbar button{
+    background-color: #4CAF50;
+    color: white;
+    border:  none;
+    font-family: 'Roboto';
+    font-size: large;
+    font-weight: 200;
+}
