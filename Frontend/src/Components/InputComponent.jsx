@@ -98,6 +98,11 @@ const filteredData = userData?.filter((item)=>{
   return matchCategory && matchTimeRange;
 })
 
+const totalExpense = filteredData?.reduce(
+  (total, item) => total + parseFloat(item.amount || 0),
+  0
+);
+
   return (
     <div className='OuterMostDiv'>
         <div className='inputFields'>
@@ -155,6 +160,14 @@ const filteredData = userData?.filter((item)=>{
               </tr>
             ))}
             </tbody>
+            <tfoot>
+            <tr>
+              <td>Total Expense : {totalExpense || 0}</td>  
+              <td></td>  
+              <td></td>  
+              <td></td>  
+            </tr>
+          </tfoot>
           </table>
         </div>
     </div>
