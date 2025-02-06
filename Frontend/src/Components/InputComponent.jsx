@@ -4,6 +4,7 @@ import axios from 'axios'
 
 const InputComponent = () => {
   
+  const[practice,setPractice]=useState();
   const[data,setData] = useState(null);
   const[loading,setLoading] = useState(true);
   const[error,setError] = useState('')
