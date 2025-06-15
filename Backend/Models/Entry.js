@@ -16,7 +16,7 @@ const entrySchema = new mongoose.Schema({
     },
     Date :{
         type: String,
-        // default : ()=> moment().format('DD/MMM/YY'),
+        default : ()=> moment().format('DD/MMM/YY'),
     },
 })
 
